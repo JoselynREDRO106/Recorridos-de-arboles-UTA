@@ -3,6 +3,7 @@
 #include <string>
 using namespace std;
 
+// Estructura de nodo para valores enteros
 struct Nodo {
     int dato;
     Nodo* izquierda;
@@ -15,6 +16,7 @@ struct Nodo {
     }
 };
 
+// Estructura de nodo para texto
 struct NodoTexto {
     string dato;
     NodoTexto* izquierda;
@@ -27,6 +29,7 @@ struct NodoTexto {
     }
 };
 
+// Recorrido preorden: primero raíz
 void preorden(Nodo* raiz) {
     if (raiz == nullptr) return;
     cout << raiz->dato << " ";
@@ -34,6 +37,7 @@ void preorden(Nodo* raiz) {
     preorden(raiz->derecha);
 }
 
+// Recorrido inorden: raíz en medio
 void inorden(Nodo* raiz) {
     if (raiz == nullptr) return;
     inorden(raiz->izquierda);
@@ -41,6 +45,7 @@ void inorden(Nodo* raiz) {
     inorden(raiz->derecha);
 }
 
+// Recorrido postorden: raíz al final
 void postorden(Nodo* raiz) {
     if (raiz == nullptr) return;
     postorden(raiz->izquierda);
@@ -48,6 +53,7 @@ void postorden(Nodo* raiz) {
     cout << raiz->dato << " ";
 }
 
+// Recorrido por niveles usando cola (BFS)
 void bfs(Nodo* raiz) {
     if (raiz == nullptr) return;
 
@@ -65,17 +71,20 @@ void bfs(Nodo* raiz) {
     }
 }
 
+// Cuenta todos los nodos del árbol
 int contarNodos(Nodo* raiz) {
     if (raiz == nullptr) return 0;
     return 1 + contarNodos(raiz->izquierda) + contarNodos(raiz->derecha);
 }
 
+// Cuenta solo los nodos hoja
 int contarHojas(Nodo* raiz) {
     if (raiz == nullptr) return 0;
     if (raiz->izquierda == nullptr && raiz->derecha == nullptr) return 1;
     return contarHojas(raiz->izquierda) + contarHojas(raiz->derecha);
 }
 
+// Recorrido preorden para árbol de texto
 void preordenTexto(NodoTexto* raiz) {
     if (raiz == nullptr) return;
     cout << raiz->dato << " ";
@@ -83,6 +92,7 @@ void preordenTexto(NodoTexto* raiz) {
     preordenTexto(raiz->derecha);
 }
 
+// Recorrido postorden para texto
 void postordenTexto(NodoTexto* raiz) {
     if (raiz == nullptr) return;
     postordenTexto(raiz->izquierda);
@@ -90,6 +100,7 @@ void postordenTexto(NodoTexto* raiz) {
     cout << raiz->dato << " ";
 }
 
+// Recorrido BFS para texto
 void bfsTexto(NodoTexto* raiz) {
     if (raiz == nullptr) return;
 
@@ -107,6 +118,7 @@ void bfsTexto(NodoTexto* raiz) {
     }
 }
 
+// Muestra todos los recorridos del árbol
 void mostrarRecorridos(Nodo* raiz) {
     cout << "Preorden: ";
     preorden(raiz);
@@ -124,6 +136,7 @@ void mostrarRecorridos(Nodo* raiz) {
 }
 
 int main() {
+    // Crear árbol inicial
     Nodo* raiz = new Nodo(10);
     raiz->izquierda = new Nodo(5);
     raiz->derecha = new Nodo(15);
@@ -134,23 +147,29 @@ int main() {
 
     cout << "RECORRIDOS DE ARBOLES BINARIOS - UTA" << endl;
 
+    // Mostrar árbol original
     cout << "\nEJERCICIO 1: Arbol original" << endl;
     mostrarRecorridos(raiz);
 
+    // Agregar nuevos nodos
     raiz->izquierda->izquierda->izquierda = new Nodo(1);
     raiz->izquierda->izquierda->derecha = new Nodo(3);
     raiz->derecha->derecha->izquierda = new Nodo(18);
     raiz->derecha->derecha->derecha = new Nodo(25);
 
-    cout << "\nEJERCICIO 2: Arbol modificado con 1, 3, 18 y 25" << endl;
+    // Mostrar árbol modificado
+    cout << "\nEJERCICIO 2: Arbol modificado" << endl;
     mostrarRecorridos(raiz);
 
+    // Contar nodos
     cout << "\nEJERCICIO 3: Total de nodos" << endl;
     cout << "Total de nodos: " << contarNodos(raiz) << endl;
 
+    // Contar hojas
     cout << "\nEJERCICIO 4: Total de hojas" << endl;
     cout << "Total de hojas: " << contarHojas(raiz) << endl;
 
+    // Crear árbol de texto
     NodoTexto* sistema = new NodoTexto("Sistema_Web");
     sistema->izquierda = new NodoTexto("Usuarios");
     sistema->derecha = new NodoTexto("Inventario");
@@ -159,20 +178,16 @@ int main() {
     sistema->derecha->izquierda = new NodoTexto("Productos");
     sistema->derecha->derecha = new NodoTexto("Reportes");
 
+    // Recorridos del sistema
     cout << "\nEJERCICIO 5: Sistema web como arbol binario" << endl;
-    cout << "1. Menu principal (Preorden): ";
+    cout << "Preorden: ";
     preordenTexto(sistema);
 
-    cout << "\n2. Procesar primero modulos internos (Postorden): ";
+    cout << "\nPostorden: ";
     postordenTexto(sistema);
 
-    cout << "\n3. Mostrar nivel por nivel (BFS): ";
+    cout << "\nBFS: ";
     bfsTexto(sistema);
 
-    cout << "\n\nExplicacion:" << endl;
-    cout << "Para mostrar el menu principal se usa Preorden porque primero muestra el modulo raiz." << endl;
-    cout << "Para procesar primero los modulos internos se usa Postorden porque atiende primero los hijos." << endl;
-    cout << "Para mostrar modulos nivel por nivel se usa BFS porque recorre el arbol por niveles." << endl;
-
     return 0;
-    }
+}
