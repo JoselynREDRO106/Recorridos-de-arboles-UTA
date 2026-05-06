@@ -1,6 +1,7 @@
 import java.util.LinkedList;
 import java.util.Queue;
 
+// Clase nodo para valores enteros
 class Nodo {
     int dato;
     Nodo izquierda;
@@ -13,6 +14,7 @@ class Nodo {
     }
 }
 
+// Clase nodo para texto
 class NodoTexto {
     String dato;
     NodoTexto izquierda;
@@ -27,6 +29,7 @@ class NodoTexto {
 
 public class Main {
 
+    // Recorrido preorden: raíz primero
     public static void preorden(Nodo raiz) {
         if (raiz == null) return;
         System.out.print(raiz.dato + " ");
@@ -34,6 +37,7 @@ public class Main {
         preorden(raiz.derecha);
     }
 
+    // Recorrido inorden: raíz en medio
     public static void inorden(Nodo raiz) {
         if (raiz == null) return;
         inorden(raiz.izquierda);
@@ -41,6 +45,7 @@ public class Main {
         inorden(raiz.derecha);
     }
 
+    // Recorrido postorden: raíz al final
     public static void postorden(Nodo raiz) {
         if (raiz == null) return;
         postorden(raiz.izquierda);
@@ -48,6 +53,7 @@ public class Main {
         System.out.print(raiz.dato + " ");
     }
 
+    // Recorrido por niveles usando cola (BFS)
     public static void bfs(Nodo raiz) {
         if (raiz == null) return;
 
@@ -63,17 +69,20 @@ public class Main {
         }
     }
 
+    // Cuenta todos los nodos
     public static int contarNodos(Nodo raiz) {
         if (raiz == null) return 0;
         return 1 + contarNodos(raiz.izquierda) + contarNodos(raiz.derecha);
     }
 
+    // Cuenta los nodos hoja
     public static int contarHojas(Nodo raiz) {
         if (raiz == null) return 0;
         if (raiz.izquierda == null && raiz.derecha == null) return 1;
         return contarHojas(raiz.izquierda) + contarHojas(raiz.derecha);
     }
 
+    // Recorrido preorden para árbol de texto
     public static void preordenTexto(NodoTexto raiz) {
         if (raiz == null) return;
         System.out.print(raiz.dato + " ");
@@ -81,6 +90,7 @@ public class Main {
         preordenTexto(raiz.derecha);
     }
 
+    // Recorrido postorden para texto
     public static void postordenTexto(NodoTexto raiz) {
         if (raiz == null) return;
         postordenTexto(raiz.izquierda);
@@ -88,6 +98,7 @@ public class Main {
         System.out.print(raiz.dato + " ");
     }
 
+    // Recorrido BFS para texto
     public static void bfsTexto(NodoTexto raiz) {
         if (raiz == null) return;
 
@@ -103,6 +114,7 @@ public class Main {
         }
     }
 
+    // Muestra todos los recorridos
     public static void mostrarRecorridos(Nodo raiz) {
         System.out.print("Preorden: ");
         preorden(raiz);
@@ -120,6 +132,8 @@ public class Main {
     }
 
     public static void main(String[] args) {
+
+        // Crear árbol inicial
         Nodo raiz = new Nodo(10);
         raiz.izquierda = new Nodo(5);
         raiz.derecha = new Nodo(15);
@@ -130,23 +144,29 @@ public class Main {
 
         System.out.println("RECORRIDOS DE ARBOLES BINARIOS - UTA");
 
+        // Mostrar árbol original
         System.out.println("\nEJERCICIO 1: Arbol original");
         mostrarRecorridos(raiz);
 
+        // Agregar nuevos nodos
         raiz.izquierda.izquierda.izquierda = new Nodo(1);
         raiz.izquierda.izquierda.derecha = new Nodo(3);
         raiz.derecha.derecha.izquierda = new Nodo(18);
         raiz.derecha.derecha.derecha = new Nodo(25);
 
-        System.out.println("\nEJERCICIO 2: Arbol modificado con 1, 3, 18 y 25");
+        // Mostrar árbol modificado
+        System.out.println("\nEJERCICIO 2: Arbol modificado");
         mostrarRecorridos(raiz);
 
+        // Contar nodos
         System.out.println("\nEJERCICIO 3: Total de nodos");
         System.out.println("Total de nodos: " + contarNodos(raiz));
 
+        // Contar hojas
         System.out.println("\nEJERCICIO 4: Total de hojas");
         System.out.println("Total de hojas: " + contarHojas(raiz));
 
+        // Crear árbol de texto
         NodoTexto sistema = new NodoTexto("Sistema_Web");
         sistema.izquierda = new NodoTexto("Usuarios");
         sistema.derecha = new NodoTexto("Inventario");
@@ -155,19 +175,22 @@ public class Main {
         sistema.derecha.izquierda = new NodoTexto("Productos");
         sistema.derecha.derecha = new NodoTexto("Reportes");
 
+        // Recorridos del sistema
         System.out.println("\nEJERCICIO 5: Sistema web como arbol binario");
-        System.out.print("1. Menu principal (Preorden): ");
+
+        System.out.print("Preorden: ");
         preordenTexto(sistema);
 
-        System.out.print("\n2. Procesar primero modulos internos (Postorden): ");
+        System.out.print("\nPostorden: ");
         postordenTexto(sistema);
 
-        System.out.print("\n3. Mostrar nivel por nivel (BFS): ");
+        System.out.print("\nBFS: ");
         bfsTexto(sistema);
 
+        // Explicación breve
         System.out.println("\n\nExplicacion:");
-        System.out.println("Para mostrar el menu principal se usa Preorden porque primero muestra el modulo raiz.");
-        System.out.println("Para procesar primero los modulos internos se usa Postorden porque atiende primero los hijos.");
-        System.out.println("Para mostrar modulos nivel por nivel se usa BFS porque recorre el arbol por niveles.");
+        System.out.println("Preorden muestra primero la raiz.");
+        System.out.println("Postorden procesa primero los hijos.");
+        System.out.println("BFS recorre el arbol por niveles.");
     }
 }
