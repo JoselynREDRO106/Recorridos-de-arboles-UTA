@@ -1,5 +1,6 @@
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Scanner;
 
 // Clase nodo para valores enteros
 class Nodo {
@@ -29,32 +30,34 @@ class NodoTexto {
 
 public class Main {
 
+    // ==================== RECORRIDOS PARA ÁRBOL DE NÚMEROS ====================
+    
     // Recorrido preorden: raíz primero
-    public static void preorden(Nodo raiz) {
+    public static void preorden(Nodo raiz, Queue<Integer> resultado) {
         if (raiz == null) return;
-        System.out.print(raiz.dato + " ");
-        preorden(raiz.izquierda);
-        preorden(raiz.derecha);
+        resultado.add(raiz.dato);
+        preorden(raiz.izquierda, resultado);
+        preorden(raiz.derecha, resultado);
     }
 
     // Recorrido inorden: raíz en medio
-    public static void inorden(Nodo raiz) {
+    public static void inorden(Nodo raiz, Queue<Integer> resultado) {
         if (raiz == null) return;
-        inorden(raiz.izquierda);
-        System.out.print(raiz.dato + " ");
-        inorden(raiz.derecha);
+        inorden(raiz.izquierda, resultado);
+        resultado.add(raiz.dato);
+        inorden(raiz.derecha, resultado);
     }
 
     // Recorrido postorden: raíz al final
-    public static void postorden(Nodo raiz) {
+    public static void postorden(Nodo raiz, Queue<Integer> resultado) {
         if (raiz == null) return;
-        postorden(raiz.izquierda);
-        postorden(raiz.derecha);
-        System.out.print(raiz.dato + " ");
+        postorden(raiz.izquierda, resultado);
+        postorden(raiz.derecha, resultado);
+        resultado.add(raiz.dato);
     }
 
     // Recorrido por niveles usando cola (BFS)
-    public static void bfs(Nodo raiz) {
+    public static void bfs(Nodo raiz, Queue<Integer> resultado) {
         if (raiz == null) return;
 
         Queue<Nodo> cola = new LinkedList<>();
@@ -62,44 +65,30 @@ public class Main {
 
         while (!cola.isEmpty()) {
             Nodo actual = cola.poll();
-            System.out.print(actual.dato + " ");
+            resultado.add(actual.dato);
 
             if (actual.izquierda != null) cola.add(actual.izquierda);
             if (actual.derecha != null) cola.add(actual.derecha);
         }
     }
 
-    // Cuenta todos los nodos
-    public static int contarNodos(Nodo raiz) {
-        if (raiz == null) return 0;
-        return 1 + contarNodos(raiz.izquierda) + contarNodos(raiz.derecha);
-    }
-
-    // Cuenta los nodos hoja
-    public static int contarHojas(Nodo raiz) {
-        if (raiz == null) return 0;
-        if (raiz.izquierda == null && raiz.derecha == null) return 1;
-        return contarHojas(raiz.izquierda) + contarHojas(raiz.derecha);
-    }
-
-    // Recorrido preorden para árbol de texto
-    public static void preordenTexto(NodoTexto raiz) {
+    // ==================== RECORRIDOS PARA ÁRBOL DE TEXTO ====================
+    
+    public static void preordenTexto(NodoTexto raiz, Queue<String> resultado) {
         if (raiz == null) return;
-        System.out.print(raiz.dato + " ");
-        preordenTexto(raiz.izquierda);
-        preordenTexto(raiz.derecha);
+        resultado.add(raiz.dato);
+        preordenTexto(raiz.izquierda, resultado);
+        preordenTexto(raiz.derecha, resultado);
     }
 
-    // Recorrido postorden para texto
-    public static void postordenTexto(NodoTexto raiz) {
+    public static void postordenTexto(NodoTexto raiz, Queue<String> resultado) {
         if (raiz == null) return;
-        postordenTexto(raiz.izquierda);
-        postordenTexto(raiz.derecha);
-        System.out.print(raiz.dato + " ");
+        postordenTexto(raiz.izquierda, resultado);
+        postordenTexto(raiz.derecha, resultado);
+        resultado.add(raiz.dato);
     }
 
-    // Recorrido BFS para texto
-    public static void bfsTexto(NodoTexto raiz) {
+    public static void bfsTexto(NodoTexto raiz, Queue<String> resultado) {
         if (raiz == null) return;
 
         Queue<NodoTexto> cola = new LinkedList<>();
@@ -107,66 +96,82 @@ public class Main {
 
         while (!cola.isEmpty()) {
             NodoTexto actual = cola.poll();
-            System.out.print(actual.dato + " ");
+            resultado.add(actual.dato);
 
             if (actual.izquierda != null) cola.add(actual.izquierda);
             if (actual.derecha != null) cola.add(actual.derecha);
         }
     }
 
-    // Muestra todos los recorridos
-    public static void mostrarRecorridos(Nodo raiz) {
-        System.out.print("Preorden: ");
-        preorden(raiz);
+    // ==================== FUNCIONES DE CONTEO ====================
+    
+    public static int contarNodos(Nodo raiz) {
+        if (raiz == null) return 0;
+        return 1 + contarNodos(raiz.izquierda) + contarNodos(raiz.derecha);
+    }
 
-        System.out.print("\nInorden: ");
-        inorden(raiz);
+    public static int contarHojas(Nodo raiz) {
+        if (raiz == null) return 0;
+        if (raiz.izquierda == null && raiz.derecha == null) return 1;
+        return contarHojas(raiz.izquierda) + contarHojas(raiz.derecha);
+    }
 
-        System.out.print("\nPostorden: ");
-        postorden(raiz);
-
-        System.out.print("\nBFS: ");
-        bfs(raiz);
-
-        System.out.println();
+    // ==================== FUNCIÓN PARA VALIDAR RECORRIDO DE NÚMEROS ====================
+    public static boolean validarRecorrido(Queue<Integer> recorridoReal, int[] ingresado) {
+        if (recorridoReal.size() != ingresado.length) return false;
+        
+        int i = 0;
+        for (int valor : recorridoReal) {
+            if (valor != ingresado[i]) return false;
+            i++;
+        }
+        return true;
+    }
+    
+    // ==================== FUNCIÓN PARA VALIDAR RECORRIDO DE TEXTO ====================
+    public static boolean validarRecorridoTexto(Queue<String> recorridoReal, String[] ingresado) {
+        if (recorridoReal.size() != ingresado.length) return false;
+        
+        int i = 0;
+        for (String valor : recorridoReal) {
+            if (!valor.equals(ingresado[i])) return false;
+            i++;
+        }
+        return true;
     }
 
     public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        System.out.println("=".repeat(70));
+        System.out.println("      RECORRIDOS DE ARBOLES BINARIOS - UTA");
+        System.out.println("=".repeat(70));
 
-        // Crear árbol inicial
-        Nodo raiz = new Nodo(10);
-        raiz.izquierda = new Nodo(5);
-        raiz.derecha = new Nodo(15);
-        raiz.izquierda.izquierda = new Nodo(2);
-        raiz.izquierda.derecha = new Nodo(7);
-        raiz.derecha.izquierda = new Nodo(12);
-        raiz.derecha.derecha = new Nodo(20);
+        // ==================== CONSTRUIR ÁRBOL PARA EJERCICIO 1 (Original) ====================
+        Nodo raizEj1 = new Nodo(10);
+        raizEj1.izquierda = new Nodo(5);
+        raizEj1.derecha = new Nodo(15);
+        raizEj1.izquierda.izquierda = new Nodo(2);
+        raizEj1.izquierda.derecha = new Nodo(7);
+        raizEj1.derecha.izquierda = new Nodo(12);
+        raizEj1.derecha.derecha = new Nodo(20);
 
-        System.out.println("RECORRIDOS DE ARBOLES BINARIOS - UTA");
+        // ==================== CONSTRUIR ÁRBOL PARA EJERCICIO 2 (Modificado) ====================
+        Nodo raizEj2 = new Nodo(10);
+        raizEj2.izquierda = new Nodo(5);
+        raizEj2.derecha = new Nodo(15);
+        raizEj2.izquierda.izquierda = new Nodo(2);
+        raizEj2.izquierda.derecha = new Nodo(7);
+        raizEj2.derecha.izquierda = new Nodo(12);
+        raizEj2.derecha.derecha = new Nodo(20);
+        
+        // Agregar nodos del ejercicio 2
+        raizEj2.izquierda.izquierda.izquierda = new Nodo(1);
+        raizEj2.izquierda.izquierda.derecha = new Nodo(3);
+        raizEj2.derecha.derecha.izquierda = new Nodo(18);
+        raizEj2.derecha.derecha.derecha = new Nodo(25);
 
-        // Mostrar árbol original
-        System.out.println("\nEJERCICIO 1: Arbol original");
-        mostrarRecorridos(raiz);
-
-        // Agregar nuevos nodos
-        raiz.izquierda.izquierda.izquierda = new Nodo(1);
-        raiz.izquierda.izquierda.derecha = new Nodo(3);
-        raiz.derecha.derecha.izquierda = new Nodo(18);
-        raiz.derecha.derecha.derecha = new Nodo(25);
-
-        // Mostrar árbol modificado
-        System.out.println("\nEJERCICIO 2: Arbol modificado");
-        mostrarRecorridos(raiz);
-
-        // Contar nodos
-        System.out.println("\nEJERCICIO 3: Total de nodos");
-        System.out.println("Total de nodos: " + contarNodos(raiz));
-
-        // Contar hojas
-        System.out.println("\nEJERCICIO 4: Total de hojas");
-        System.out.println("Total de hojas: " + contarHojas(raiz));
-
-        // Crear árbol de texto
+        // ==================== CONSTRUIR ÁRBOL DE TEXTO (Ejercicio 5) ====================
         NodoTexto sistema = new NodoTexto("Sistema_Web");
         sistema.izquierda = new NodoTexto("Usuarios");
         sistema.derecha = new NodoTexto("Inventario");
@@ -175,22 +180,354 @@ public class Main {
         sistema.derecha.izquierda = new NodoTexto("Productos");
         sistema.derecha.derecha = new NodoTexto("Reportes");
 
-        // Recorridos del sistema
-        System.out.println("\nEJERCICIO 5: Sistema web como arbol binario");
+        // ==================== CALCULAR RECORRIDOS REALES ====================
+        Queue<Integer> preordenEj1 = new LinkedList<>();
+        Queue<Integer> inordenEj1 = new LinkedList<>();
+        Queue<Integer> postordenEj1 = new LinkedList<>();
+        Queue<Integer> bfsEj1 = new LinkedList<>();
+        
+        preorden(raizEj1, preordenEj1);
+        inorden(raizEj1, inordenEj1);
+        postorden(raizEj1, postordenEj1);
+        bfs(raizEj1, bfsEj1);
+        
+        Queue<Integer> preordenEj2 = new LinkedList<>();
+        Queue<Integer> inordenEj2 = new LinkedList<>();
+        Queue<Integer> postordenEj2 = new LinkedList<>();
+        Queue<Integer> bfsEj2 = new LinkedList<>();
+        
+        preorden(raizEj2, preordenEj2);
+        inorden(raizEj2, inordenEj2);
+        postorden(raizEj2, postordenEj2);
+        bfs(raizEj2, bfsEj2);
+        
+        Queue<String> preordenTexto = new LinkedList<>();
+        Queue<String> postordenTexto = new LinkedList<>();
+        Queue<String> bfsTexto = new LinkedList<>();
+        
+        preordenTexto(sistema, preordenTexto);
+        postordenTexto(sistema, postordenTexto);
+        bfsTexto(sistema, bfsTexto);
 
-        System.out.print("Preorden: ");
-        preordenTexto(sistema);
-
-        System.out.print("\nPostorden: ");
-        postordenTexto(sistema);
-
-        System.out.print("\nBFS: ");
-        bfsTexto(sistema);
-
-        // Explicación breve
-        System.out.println("\n\nExplicacion:");
-        System.out.println("Preorden muestra primero la raiz.");
-        System.out.println("Postorden procesa primero los hijos.");
-        System.out.println("BFS recorre el arbol por niveles.");
+        // ==================== MENÚ PRINCIPAL POR EJERCICIOS ====================
+        int opcion;
+        do {
+            System.out.println("\n" + "-".repeat(70));
+            System.out.println("                     MENU PRINCIPAL");
+            System.out.println("-".repeat(70));
+            System.out.println("| 1. EJERCICIO 1 - Árbol original (10,5,15,2,7,12,20)          |");
+            System.out.println("| 2. EJERCICIO 2 - Árbol modificado (con 1,3,18,25)             |");
+            System.out.println("| 3. EJERCICIO 3 - Contar nodos totales                         |");
+            System.out.println("| 4. EJERCICIO 4 - Contar hojas                                 |");
+            System.out.println("| 5. EJERCICIO 5 - Sistema web como árbol binario               |");
+            System.out.println("| 0. SALIR                                                      |");
+            System.out.println("-".repeat(70));
+            System.out.print("Seleccione un ejercicio: ");
+            
+            opcion = scanner.nextInt();
+            scanner.nextLine(); // Limpiar buffer
+            
+            switch(opcion) {
+                case 1:
+                    menuEjercicio1(scanner, preordenEj1, inordenEj1, postordenEj1, bfsEj1);
+                    break;
+                case 2:
+                    menuEjercicio2(scanner, preordenEj2, inordenEj2, postordenEj2, bfsEj2);
+                    break;
+                case 3:
+                    menuEjercicio3(scanner, raizEj2);
+                    break;
+                case 4:
+                    menuEjercicio4(scanner, raizEj2);
+                    break;
+                case 5:
+                    menuEjercicio5(scanner, preordenTexto, postordenTexto, bfsTexto);
+                    break;
+                case 0:
+                    System.out.println("\n>>> PROGRAMA FINALIZADO <<<");
+                    break;
+                default:
+                    System.out.println("\n>>> OPCIÓN INVÁLIDA. Intente nuevamente <<<");
+            }
+            
+        } while(opcion != 0);
+        
+        scanner.close();
+    }
+    
+    // ==================== MENÚ EJERCICIO 1 ====================
+    public static void menuEjercicio1(Scanner scanner, Queue<Integer> preorden, Queue<Integer> inorden, 
+                                       Queue<Integer> postorden, Queue<Integer> bfs) {
+        int opcion;
+        do {
+            System.out.println("\n" + "-".repeat(50));
+            System.out.println("        EJERCICIO 1 - Árbol original");
+            System.out.println("     Árbol: 10, 5, 15, 2, 7, 12, 20");
+            System.out.println("-".repeat(50));
+            System.out.println("  1. Validar Preorden");
+            System.out.println("  2. Validar Inorden");
+            System.out.println("  3. Validar Postorden");
+            System.out.println("  4. Validar BFS (Niveles)");
+            System.out.println("  5. Mostrar recorridos correctos");
+            System.out.println("  0. Volver al menú principal");
+            System.out.println("-".repeat(50));
+            System.out.print("Seleccione una opción: ");
+            
+            opcion = scanner.nextInt();
+            scanner.nextLine();
+            
+            switch(opcion) {
+                case 1:
+                    validarRecorridoNumerico(scanner, preorden, "PREORDEN", 
+                        "Esperado: 10, 5, 2, 7, 15, 12, 20");
+                    break;
+                case 2:
+                    validarRecorridoNumerico(scanner, inorden, "INORDEN",
+                        "Esperado: 2, 5, 7, 10, 12, 15, 20");
+                    break;
+                case 3:
+                    validarRecorridoNumerico(scanner, postorden, "POSTORDEN",
+                        "Esperado: 2, 7, 5, 12, 20, 15, 10");
+                    break;
+                case 4:
+                    validarRecorridoNumerico(scanner, bfs, "BFS (NIVELES)",
+                        "Esperado: 10, 5, 15, 2, 7, 12, 20");
+                    break;
+                case 5:
+                    System.out.println("\n>>> RECORRIDOS CORRECTOS DEL ÁRBOL ORIGINAL <<<");
+                    System.out.println("Preorden:  " + recorridoToString(preorden));
+                    System.out.println("Inorden:   " + recorridoToString(inorden));
+                    System.out.println("Postorden: " + recorridoToString(postorden));
+                    System.out.println("BFS:       " + recorridoToString(bfs));
+                    break;
+                case 0:
+                    System.out.println("\n>>> VOLVIENDO AL MENÚ PRINCIPAL <<<");
+                    break;
+                default:
+                    System.out.println("\n>>> OPCIÓN INVÁLIDA <<<");
+            }
+        } while(opcion != 0);
+    }
+    
+    // ==================== MENÚ EJERCICIO 2 ====================
+    public static void menuEjercicio2(Scanner scanner, Queue<Integer> preorden, Queue<Integer> inorden,
+                                       Queue<Integer> postorden, Queue<Integer> bfs) {
+        int opcion;
+        do {
+            System.out.println("\n" + "-".repeat(50));
+            System.out.println("      EJERCICIO 2 - Árbol modificado");
+            System.out.println("  Árbol: 10,5,15,2,7,12,20 + (1,3,18,25)");
+            System.out.println("-".repeat(50));
+            System.out.println("  1. Validar Preorden");
+            System.out.println("  2. Validar Inorden");
+            System.out.println("  3. Validar Postorden");
+            System.out.println("  4. Validar BFS (Niveles)");
+            System.out.println("  5. Mostrar recorridos correctos");
+            System.out.println("  0. Volver al menú principal");
+            System.out.println("-".repeat(50));
+            System.out.print("Seleccione una opción: ");
+            
+            opcion = scanner.nextInt();
+            scanner.nextLine();
+            
+            switch(opcion) {
+                case 1:
+                    validarRecorridoNumerico(scanner, preorden, "PREORDEN",
+                        "Esperado: 10, 5, 2, 1, 3, 7, 15, 12, 20, 18, 25");
+                    break;
+                case 2:
+                    validarRecorridoNumerico(scanner, inorden, "INORDEN",
+                        "Esperado: 1, 2, 3, 5, 7, 10, 12, 15, 18, 20, 25");
+                    break;
+                case 3:
+                    validarRecorridoNumerico(scanner, postorden, "POSTORDEN",
+                        "Esperado: 1, 3, 2, 7, 5, 12, 18, 25, 20, 15, 10");
+                    break;
+                case 4:
+                    validarRecorridoNumerico(scanner, bfs, "BFS (NIVELES)",
+                        "Esperado: 10, 5, 15, 2, 7, 12, 20, 1, 3, 18, 25");
+                    break;
+                case 5:
+                    System.out.println("\n>>> RECORRIDOS CORRECTOS DEL ÁRBOL MODIFICADO <<<");
+                    System.out.println("Preorden:  " + recorridoToString(preorden));
+                    System.out.println("Inorden:   " + recorridoToString(inorden));
+                    System.out.println("Postorden: " + recorridoToString(postorden));
+                    System.out.println("BFS:       " + recorridoToString(bfs));
+                    break;
+                case 0:
+                    System.out.println("\n>>> VOLVIENDO AL MENÚ PRINCIPAL <<<");
+                    break;
+                default:
+                    System.out.println("\n>>> OPCIÓN INVÁLIDA <<<");
+            }
+        } while(opcion != 0);
+    }
+    
+    // ==================== MENÚ EJERCICIO 3 ====================
+    public static void menuEjercicio3(Scanner scanner, Nodo raiz) {
+        int totalNodos = contarNodos(raiz);
+        System.out.println("\n" + "-".repeat(50));
+        System.out.println("           EJERCICIO 3 - Contar nodos totales");
+        System.out.println("-".repeat(50));
+        System.out.println("El árbol tiene " + totalNodos + " nodos en total.");
+        System.out.println("\nPresione ENTER para continuar...");
+        scanner.nextLine();
+    }
+    
+    // ==================== MENÚ EJERCICIO 4 ====================
+    public static void menuEjercicio4(Scanner scanner, Nodo raiz) {
+        int totalHojas = contarHojas(raiz);
+        System.out.println("\n" + "-".repeat(50));
+        System.out.println("              EJERCICIO 4 - Contar hojas");
+        System.out.println("-".repeat(50));
+        System.out.println("El árbol tiene " + totalHojas + " nodos hoja.");
+        System.out.println("\nPresione ENTER para continuar...");
+        scanner.nextLine();
+    }
+    
+    // ==================== MENÚ EJERCICIO 5 ====================
+    public static void menuEjercicio5(Scanner scanner, Queue<String> preorden, 
+                                       Queue<String> postorden, Queue<String> bfs) {
+        int opcion;
+        do {
+            System.out.println("\n" + "-".repeat(50));
+            System.out.println("     EJERCICIO 5 - Sistema Web como árbol binario");
+            System.out.println("-".repeat(50));
+            System.out.println("  1. Validar Preorden");
+            System.out.println("  2. Validar Postorden");
+            System.out.println("  3. Validar BFS (Niveles)");
+            System.out.println("  4. Mostrar recorridos correctos");
+            System.out.println("  5. Explicación de recorridos");
+            System.out.println("  0. Volver al menú principal");
+            System.out.println("-".repeat(50));
+            System.out.print("Seleccione una opción: ");
+            
+            opcion = scanner.nextInt();
+            scanner.nextLine();
+            
+            switch(opcion) {
+                case 1:
+                    validarRecorridoTexto(scanner, preorden, "PREORDEN",
+                        "Esperado: Sistema_Web, Usuarios, Registrar, Buscar, Inventario, Productos, Reportes");
+                    break;
+                case 2:
+                    validarRecorridoTexto(scanner, postorden, "POSTORDEN",
+                        "Esperado: Registrar, Buscar, Usuarios, Productos, Reportes, Inventario, Sistema_Web");
+                    break;
+                case 3:
+                    validarRecorridoTexto(scanner, bfs, "BFS (NIVELES)",
+                        "Esperado: Sistema_Web, Usuarios, Inventario, Registrar, Buscar, Productos, Reportes");
+                    break;
+                case 4:
+                    System.out.println("\n>>> RECORRIDOS CORRECTOS DEL SISTEMA WEB <<<");
+                    System.out.println("Preorden:  " + recorridoTextoToString(preorden));
+                    System.out.println("Postorden: " + recorridoTextoToString(postorden));
+                    System.out.println("BFS:       " + recorridoTextoToString(bfs));
+                    break;
+                case 5:
+                    System.out.println("\n>>> EXPLICACIÓN DE RECORRIDOS PARA SISTEMA WEB <<<");
+                    System.out.println("1. PREORDEN (Raíz → Izquierda → Derecha):");
+                    System.out.println("   - Muestra primero el módulo principal (Sistema_Web)");
+                    System.out.println("   - Útil para mostrar menú principal");
+                    System.out.println("\n2. POSTORDEN (Izquierda → Derecha → Raíz):");
+                    System.out.println("   - Procesa primero los submódulos internos");
+                    System.out.println("   - Útil para validar permisos antes de acceder al padre");
+                    System.out.println("\n3. BFS / NIVELES:");
+                    System.out.println("   - Muestra todos los módulos por nivel jerárquico");
+                    System.out.println("   - Ideal para interfaces de usuario");
+                    break;
+                case 0:
+                    System.out.println("\n>>> VOLVIENDO AL MENÚ PRINCIPAL <<<");
+                    break;
+                default:
+                    System.out.println("\n>>> OPCIÓN INVÁLIDA <<<");
+            }
+        } while(opcion != 0);
+    }
+    
+    // ==================== FUNCIÓN PARA VALIDAR RECORRIDO DE NÚMEROS ====================
+    public static void validarRecorridoNumerico(Scanner scanner, Queue<Integer> recorridoReal, 
+                                                 String nombreRecorrido, String esperado) {
+        System.out.println("\n>>> VALIDANDO RECORRIDO " + nombreRecorrido + " <<<");
+        System.out.println("Ingrese la secuencia de números separados por espacios:");
+        System.out.print("Ejemplo: " + esperado.split("Esperado: ")[1] + "\n→ ");
+        
+        String linea = scanner.nextLine();
+        String[] partes = linea.trim().split("\\s+");
+        int[] ingresado = new int[partes.length];
+        
+        try {
+            for (int i = 0; i < partes.length; i++) {
+                ingresado[i] = Integer.parseInt(partes[i]);
+            }
+            
+            System.out.println("\n>>> CORRIENDO VALIDACIÓN PARA " + nombreRecorrido + " <<<");
+            
+            if (validarRecorrido(recorridoReal, ingresado)) {
+                System.out.println("✓ ¡RECORRIDO CORRECTO!");
+                System.out.println("  La secuencia ingresada coincide con el recorrido " + nombreRecorrido);
+            } else {
+                System.out.println("✗ ERROR: RECORRIDO INCORRECTO");
+                System.out.println("  Secuencia ingresada: " + arrayToString(ingresado));
+                System.out.println("  " + esperado);
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("\n>>> ERROR: Debe ingresar solo números enteros <<<");
+        }
+    }
+    
+    // ==================== FUNCIÓN PARA VALIDAR RECORRIDO DE TEXTO ====================
+    public static void validarRecorridoTexto(Scanner scanner, Queue<String> recorridoReal,
+                                              String nombreRecorrido, String esperado) {
+        System.out.println("\n>>> VALIDANDO RECORRIDO " + nombreRecorrido + " (SISTEMA WEB) <<<");
+        System.out.println("Ingrese la secuencia de palabras separadas por espacios:");
+        System.out.print("Ejemplo: " + esperado.split("Esperado: ")[1] + "\n→ ");
+        
+        String linea = scanner.nextLine();
+        String[] ingresado = linea.trim().split("\\s+");
+        
+        System.out.println("\n>>> CORRIENDO VALIDACIÓN PARA " + nombreRecorrido + " <<<");
+        
+        if (validarRecorridoTexto(recorridoReal, ingresado)) {
+            System.out.println("✓ ¡RECORRIDO CORRECTO!");
+            System.out.println("  La secuencia ingresada coincide con el recorrido " + nombreRecorrido);
+        } else {
+            System.out.println("✗ ERROR: RECORRIDO INCORRECTO");
+            System.out.println("  Secuencia ingresada: " + arrayTextoToString(ingresado));
+            System.out.println("  " + esperado);
+        }
+    }
+    
+    // ==================== FUNCIONES AUXILIARES ====================
+    public static String recorridoToString(Queue<Integer> cola) {
+        StringBuilder sb = new StringBuilder();
+        for (int valor : cola) {
+            sb.append(valor).append(" ");
+        }
+        return sb.toString().trim();
+    }
+    
+    public static String recorridoTextoToString(Queue<String> cola) {
+        StringBuilder sb = new StringBuilder();
+        for (String valor : cola) {
+            sb.append(valor).append(" ");
+        }
+        return sb.toString().trim();
+    }
+    
+    public static String arrayToString(int[] arr) {
+        StringBuilder sb = new StringBuilder();
+        for (int num : arr) {
+            sb.append(num).append(" ");
+        }
+        return sb.toString().trim();
+    }
+    
+    public static String arrayTextoToString(String[] arr) {
+        StringBuilder sb = new StringBuilder();
+        for (String s : arr) {
+            sb.append(s).append(" ");
+        }
+        return sb.toString().trim();
     }
 }
