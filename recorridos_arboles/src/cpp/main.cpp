@@ -531,24 +531,5 @@ void validarRecorridoNumericoInteractivo(queue<int> recorridoReal, string nombre
     }
 }
 
+
 // ==================== VALIDACIÓN PARA TEXTO ====================
-void validarRecorridoTextoInteractivo(queue<string> recorridoReal, string nombreRecorrido, string esperado) {
-    cout << "\n>>> VALIDANDO RECORRIDO " << nombreRecorrido << " (SISTEMA WEB) <<<" << endl;
-    cout << "Ingrese la secuencia de palabras separadas por espacios:" << endl;
-    cout << "Ejemplo: " << esperado.substr(esperado.find(": ") + 2) << endl;
-    cout << "→ ";
-    
-    string linea;
-    getline(cin, linea);
-    vector<string> ingresado = splitToString(linea);
-    
-    cout << "\n>>> CORRIENDO VALIDACION PARA " << nombreRecorrido << " <<<" << endl;
-    
-    if (validarRecorridoTexto(recorridoReal, ingresado)) {
-        cout << "✓ ¡RECORRIDO CORRECTO!" << endl;
-        cout << "  La secuencia ingresada coincide con el recorrido " << nombreRecorrido << endl;
-    } else {
-        cout << "✗ ERROR: RECORRIDO INCORRECTO" << endl;
-        cout << "  " << esperado << endl;
-    }
-}
